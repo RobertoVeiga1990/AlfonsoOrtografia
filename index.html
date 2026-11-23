@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aventura Ortográfica 3.º - Edición Alfonso</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Fredoka y Nunito para máxima legibilidad infantil -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Fredoka', 'sans-serif'],
+                        body: ['Nunito', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Estilos base optimizados para tablet táctil */
+        * {
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            overflow-x: hidden;
+            background-color: #0f172a;
+        }
+
+        h1, h2, h3, .font-display {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        /* Efecto de botón táctil 3D */
+        .btn-tactile {
+            transition: transform 0.1s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.1s ease;
+        }
+        .btn-tactile:active {
+            transform: translateY(4px) scale(0.98);
+        }
+
+        /* Animaciones personalizadas */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        .animate-float {
+            animation: float 3.5s ease-in-out infinite;
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.85) translateY(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .animate-pop {
+            animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+        .animate-shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        /* Temas visuales por mundo */
+        .theme-blocks {
+            background: radial-gradient(circle at top right, #1e3a2f, #0f1f18 70%);
+        }
+        .theme-trainers {
+            background: radial-gradient(circle at top right, #450a0a, #1c1917 70%);
+        }
+        .theme-dragon {
+            background: radial-gradient(circle at top right, #3b0764, #1e1b4b 70%);
+        }
+        .theme-magic {
+            background: radial-gradient(circle at top right, #172554, #090d16 70%);
+        }
+        .theme-hub {
+            background: radial-gradient(circle at top, #1e293b, #090d16 80%);
+        }
+
+        /* Partículas de celebración */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            animation: particleFly 1s ease-out forwards;
+        }
+        @keyframes particleFly {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0.3) rotate(360deg); opacity: 0; }
+        }
+
+        /* Barra de desplazamiento limpia */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 999px;
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col justify-between selection:bg-amber-400 selection:text-slate-900">
+
+    <!-- CABECERA SUPERIOR PERSISTENTE -->
+    <header class="w-full px-4 py-3 md:px-8 md:py-4 bg-slate-900/80 backdrop-blur-md border-b border-white/10 sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3">
+            <!-- Logo y Título -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="app.goHome()">
+                <div class="w-11 h-11 md:w-12 md:h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-orange-500/20 border-2 border-amber-200">
+                    <svg class="w-7 h-7 text-slate-900" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold tracking-tight text-white leading-none">Aventura Ortográfica <span class="text-amber-400">3.º</span></h1>
+                    <p class="text-xs md:text-sm text-slate-400 font-semibold">Entrenamiento de Alfonso</p>
+                </div>
+            </div>
+
+            <!-- Indicadores de Estado y Botones Rápidos -->
+            <div class="flex items-center gap-2 md:gap-4">
+                <!-- Racha -->
+                <div class="flex items-center gap-1.5 bg-slate-800/90 border border-orange-500/30 px-3 py-2 rounded-2xl shadow-inner" title="Racha de aciertos seguidos">
+                    <span class="text-lg md:text-xl">🔥</span>
+                    <span id="header-streak" class="font-display font-bold text-base md:text-lg text-orange-400">0</span>
+                </div>
+
+                <!-- Estrellas Totales -->
+                <div class="flex items-center gap-1.5 bg-slate-800/90 border border-amber-400/30 px-3 py-2 rounded-2xl shadow-inner" title="Estrellas ganadas">
+                    <span class="text-lg md:text-xl">⭐</span>
+                    <span id="header-stars" class="font-display font-bold text-base md:text-lg text-amber-300">0</span>
+                </div>
+
+                <!-- Botón Álbum de Trofeos -->
+                <button onclick="app.openTrophies()" class="btn-tactile flex items-center gap-2 bg-gradient-to-b from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-display font-bold px-3.5 py-2 md:px-4 md:py-2.5 rounded-2xl shadow-md shadow-amber-500/20 border-b-4 border-amber-700 text-sm md:text-base">
+                    <span>🏆</span>
+                    <span class="hidden sm:inline">Trofeos</span>
+                    <span id="header-trophy-count" class="bg-slate-950/20 px-2 py-0.5 rounded-full text-xs">0/8</span>
+                </button>
+
+                <!-- Botón Sonido -->
+                <button id="btn-sound" onclick="app.toggleSound()" class="btn-tactile w-11 h-11 md:w-12 md:h-12 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-white/10 border-b-4 border-slate-950 flex items-center justify-center text-xl" aria-label="Activar o desactivar sonido">
+                    🔊
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <main id="app-container" class="flex-1 w-full max-w-6xl mx-auto px-4 py-6 md:px-8 md:py-8 flex flex-col justify-center">
+        <!-- El contenido se renderiza dinámicamente aquí -->
+    </main>
+
+    <!-- PIE DE PÁGINA DISCRETO -->
+    <footer class="w-full py-3 px-4 text-center text-xs text-slate-500 border-t border-white/5 bg-slate-950/40">
+        Lengua Castellana · 3.º de Primaria · Diseñado para Alfonso
+    </footer>
+
+    <!-- MODAL PARA ÁLBUM DE TROFEOS Y REGLAS -->
+    <div id="modal-overlay" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div id="modal-content" class="bg-slate-900 border-2 border-white/15 rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 shadow-2xl animate-pop">
+            <!-- Contenido dinámico del modal -->
+        </div>
+    </div>
+
+    <script>
+        /**
+         * MOTOR DE AUDIO SINTETIZADO (Web Audio API)
+         * Genera efectos agradables sin depender de archivos externos.
+         */
+        class SoundFX {
+            constructor() {
+                this.enabled = true;
+                this.ctx = null;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    this.ctx = new AudioContext();
+                }
+                if (this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+            }
+
+            playTap() {
+                if (!this.enabled) return;
+                this.init();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(520, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(680, this.ctx.currentTime + 0.06);
+                gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.06);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.07);
+            }
+
+            playSuccess() {
+                if (!this.enabled) return;
+                this.init();
+                const notes = [523.25, 659.25, 783.99, 1046.50]; // Do5, Mi5, Sol5, Do6
+                notes.forEach((freq, i) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'triangle';
+                    const startTime = this.ctx.currentTime + i * 0.08;
+                    osc.frequency.setValueAtTime(freq, startTime);
+                    gain.gain.setValueAtTime(0.18, startTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.25);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(startTime);
+                    osc.stop(startTime + 0.26);
+                });
+            }
+
+            playHint() {
+                if (!this.enabled) return;
+                this.init();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(340, this.ctx.currentTime);
+                osc.frequency.linearRampToValueAtTime(290, this.ctx.currentTime + 0.22);
+                gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.24);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.25);
+            }
+
+            playTrophy() {
+                if (!this.enabled) return;
+                this.init();
+                const notes = [587.33, 739.99, 880, 1174.66];
+                notes.forEach((freq, i) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sine';
+                    const t = this.ctx.currentTime + i * 0.11;
+                    osc.frequency.setValueAtTime(freq, t);
+                    gain.gain.setValueAtTime(0.22, t);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(t);
+                    osc.stop(t + 0.42);
+                });
+            }
+        }
+
+        const sfx = new SoundFX();
+
+        /**
+         * BASE DE DATOS CURRICULAR (3.º DE PRIMARIA - LENGUA CASTELLANA)
+         * 4 Mundos Temáticos x 15 Ejercicios cada uno = 60 actividades interactivas.
+         * Tipos: 'choice' (completar/elegir), 'syllable' (tocar sílaba tónica), 'order' (ordenar bloques)
+         */
+        const WORLDS = [
+            {
+                id: 'blocks',
+                name: 'Mundo Bloques',
+                subtitle: 'Uso de B / V y G / J (gue, gui, güe, güi)',
+                themeClass: 'theme-blocks',
+                accentColor: 'emerald',
+                cardBg: 'from-emerald-900/90 to-stone-900/95',
+                borderColor: 'border-emerald-500/50',
+                badgeBg: 'bg-emerald-500 text-slate-950',
+                btnClass: 'from-emerald-500 to-emerald-600 border-emerald-800 text-slate-950',
+                iconSvg: `<svg viewBox="0 0 64 64" class="w-16 h-16 drop-shadow-md">
+                    <rect x="8" y="8" width="48" height="48" rx="6" fill="#5D4037" stroke="#2E7D32" stroke-width="4"/>
+                    <path d="M8 14C8 10.6863 10.6863 8 14 8H50C53.3137 8 56 10.6863 56 14V24H48V28H40V22H32V28H24V22H16V26H8V14Z" fill="#4CAF50"/>
+                    <rect x="18" y="36" width="8" height="8" fill="#38BDF8"/>
+                    <rect x="38" y="40" width="8" height="8" fill="#38BDF8"/>
+                    <rect x="28" y="44" width="6" height="6" fill="#38BDF8"/>
+                </svg>`,
+                trophies: [
+                    { id: 'blocks_1', name: 'Pico de Piedra', desc: 'Consigue 5 aciertos en Mundo Bloques', req: 5, icon: '⛏️' },
+                    { id: 'blocks_2', name: 'Espada de Diamante', desc: 'Domina los 15 retos de Mundo Bloques', req: 15, icon: '💎' }
+                ],
+                questions: [
+                    {
+                        id: 'b1', type: 'choice',
+                        prompt: 'Para picar diamantes en la cueva oscura necesitas una buena...',
+                        sentence: '___RÚJULA',
+                        options: ['B', 'V'],
+                        answer: 'B',
+                        rule: 'Se escribe con B delante de consonante (como en br-, bl-). ¡Brújula lleva B!'
+                    },
+                    {
+                        id: 'b2', type: 'choice',
+                        prompt: 'El explorador guardó las antorchas y el pico dentro de su...',
+                        sentence: 'MOCHILA NUE___A',
+                        options: ['V', 'B'],
+                        answer: 'V',
+                        rule: 'Los adjetivos terminados en -ava, -ave, -avo, -eva, -eve, -evo, -iva, -ivo se escriben con V (nueva).'
+                    },
+                    {
+                        id: 'b3', type: 'choice',
+                        prompt: 'En el bioma helado caminaba un simpático...',
+                        sentence: 'PIN___INO',
+                        options: ['GÜ', 'GU', 'J'],
+                        answer: 'GÜ',
+                        rule: 'Usamos diéresis (ü) en güe y güi cuando queremos que la u suene: pin-güi-no.'
+                    },
+                    {
+                        id: 'b4', type: 'choice',
+                        prompt: '¡Cuidado! Detrás de ese árbol verde se esconde un...',
+                        sentence: '___IGANTE',
+                        options: ['G', 'J'],
+                        answer: 'G',
+                        rule: 'Gigante se escribe con G en las dos sílabas (gi-gan-te).'
+                    },
+                    {
+                        id: 'b5', type: 'choice',
+                        prompt: 'El herrero de la aldea encendió la...',
+                        sentence: 'HO___ERA',
+                        options: ['GU', 'G', 'GÜ'],
+                        answer: 'GU',
+                        rule: 'Para que la G suene suave delante de E o I sin pronunciar la U, escribimos GUE / GUI (hoguera).'
+                    },
+                    {
+                        id: 'b6', type: 'choice',
+                        prompt: 'Al caer la noche empezó a caer una fuerte...',
+                        sentence: 'LLU___IA',
+                        options: ['V', 'B'],
+                        answer: 'V',
+                        rule: 'Las palabras que empiezan por llu- (como lluvia, lluvioso) se escriben con V.'
+                    },
+                    {
+                        id: 'b7', type: 'choice',
+                        prompt: 'Para apagar la lava usamos un cubo lleno de...',
+                        sentence: 'A___ITA',
+                        options: ['GÜ', 'GU', 'J'],
+                        answer: 'GÜ',
+                        rule: 'Como suena la U delante de la I, necesita los dos puntitos de la diéresis: a-güi-ta.'
+                    },
+                    {
+                        id: 'b8', type: 'choice',
+                        prompt: 'El aldeano nos dio un mapa para empezar el...',
+                        sentence: 'VIA___E',
+                        options: ['J', 'G'],
+                        answer: 'J',
+                        rule: 'Todas las palabras que terminan en -aje se escriben con J (viaje, equipaje, paisaje).'
+                    },
+                    {
+                        id: 'b9', type: 'choice',
+                        prompt: 'Antes de cruzar el puente de madera hay que...',
+                        sentence: 'COMPRO___AR',
+                        options: ['B', 'V'],
+                        answer: 'B',
+                        rule: 'Después de M siempre se escribe B (comprobar, cambiar, tambor).'
+                    },
+                    {
+                        id: 'b10', type: 'choice',
+                        prompt: 'En el huerto de la granja crecieron unos...',
+                        sentence: '___IRASOLES',
+                        options: ['G', 'J'],
+                        answer: 'G',
+                        rule: 'Girasol viene de girar y se escribe con G.'
+                    },
+                    {
+                        id: 'b11', type: 'choice',
+                        prompt: 'El lobo domesticado movía la cola con mucha...',
+                        sentence: 'ALE___ÍA',
+                        options: ['GR', 'JR'],
+                        answer: 'GR',
+                        rule: 'Delante de L y R siempre se escribe G (alegría, grande, globo).'
+                    },
+                    {
+                        id: 'b12', type: 'choice',
+                        prompt: 'El cofre secreto estaba cerrado con una...',
+                        sentence: 'LLA___E',
+                        options: ['V', 'B'],
+                        answer: 'V',
+                        rule: 'Las palabras que empiezan por lla-, lle-, llo-, llu- llevan V (llave, llevar, llover).'
+                    },
+                    {
+                        id: 'b13', type: 'order',
+                        prompt: 'Ordena los bloques para formar la frase correcta:',
+                        words: ['El', 'golem', 'protege', 'la', 'aldea', 'tranquila.'],
+                        answer: 'El golem protege la aldea tranquila.',
+                        rule: 'Toda oración empieza con mayúscula y termina con un punto.'
+                    },
+                    {
+                        id: 'b14', type: 'choice',
+                        prompt: 'El caballo blanco saltó por encima del...',
+                        sentence: 'AR___USTO',
+                        options: ['B', 'V'],
+                        answer: 'B',
+                        rule: 'Arbusto se escribe con B.'
+                    },
+                    {
+                        id: 'b15', type: 'order',
+                        prompt: 'Construye la misión del minero:',
+                        words: ['Buscamos', 'gemas', 'brillantes', 'en', 'la', 'mina.'],
+                        answer: 'Buscamos gemas brillantes en la mina.',
+                        rule: 'Recuerda: "buscamos" y "brillantes" se escriben con B, y "gemas" con G.'
+                    }
+                ]
+            },
+            {
+                id: 'trainers',
+                name: 'Liga Entrenadores',
+                subtitle: 'Uso de H (hie-, hue-), LL / Y y R / RR',
+                themeClass: 'theme-trainers',
+                accentColor: 'rose',
+                cardBg: 'from-red-950/90 to-stone-900/95',
+                borderColor: 'border-rose-500/50',
+                badgeBg: 'bg-rose-500 text-white',
+                btnClass: 'from-rose-500 to-red-600 border-red-900 text-white',
+                iconSvg: `<svg viewBox="0 0 64 64" class="w-16 h-16 drop-shadow-md">
+                    <circle cx="32" cy="32" r="26" fill="#FFFFFF" stroke="#1E293B" stroke-width="4"/>
+                    <path d="M6 32C6 17.6406 17.6406 6 32 6C46.3594 6 58 17.6406 58 32H6Z" fill="#EF4444" stroke="#1E293B" stroke-width="4"/>
+                    <line x1="6" y1="32" x2="58" y2="32" stroke="#1E293B" stroke-width="5"/>
+                    <circle cx="32" cy="32" r="9" fill="#FFFFFF" stroke="#1E293B" stroke-width="4"/>
+                    <circle cx="32" cy="32" r="4" fill="#FBBF24"/>
+                </svg>`,
+                trophies: [
+                    { id: 'trainers_1', name: 'Medalla Rayo', desc: 'Consigue 5 aciertos en Liga Entrenadores', req: 5, icon: '⚡' },
+                    { id: 'trainers_2', name: 'Copa Campeón Liga', desc: 'Completa los 15 retos de Liga Entrenadores', req: 15, icon: '🥇' }
+                ],
+                questions: [
+                    {
+                        id: 't1', type: 'choice',
+                        prompt: 'El ataque tipo hielo congeló el suelo y dejó una placa de...',
+                        sentence: '___ELO',
+                        options: ['HI', 'I'],
+                        answer: 'HI',
+                        rule: 'Todas las palabras que empiezan por hie- o hue- se escriben con H (hielo, hierba, huevo).'
+                    },
+                    {
+                        id: 't2', type: 'choice',
+                        prompt: 'De ese misterioso objeto manchado nació una criatura:',
+                        sentence: '___EVO',
+                        options: ['HU', 'U'],
+                        answer: 'HU',
+                        rule: 'Las palabras que empiezan por hue- siempre llevan H inicial (huevo, hueso, huella).'
+                    },
+                    {
+                        id: 't3', type: 'choice',
+                        prompt: 'El ratón eléctrico lanzó un poderoso...',
+                        sentence: 'RA___O',
+                        options: ['Y', 'LL'],
+                        answer: 'Y',
+                        rule: 'Rayo se escribe con Y. Recuerda que al final de palabra también escribimos Y (rey, hoy, muy).'
+                    },
+                    {
+                        id: 't4', type: 'choice',
+                        prompt: 'El dragón de fuego soltó un rugido muy fuerte en la...',
+                        sentence: 'TO___E',
+                        options: ['RR', 'R'],
+                        answer: 'RR',
+                        rule: 'Escribimos RR cuando el sonido es fuerte y va entre dos vocales (to-rre, pe-rro, ca-rro).'
+                    },
+                    {
+                        id: 't5', type: 'choice',
+                        prompt: '¡Mira! En la arena del estadio han quedado unas...',
+                        sentence: '___ELLAS',
+                        options: ['HU', 'U'],
+                        answer: 'HU',
+                        rule: 'Empieza por hue-, así que lleva H: huellas.'
+                    },
+                    {
+                        id: 't6', type: 'choice',
+                        prompt: 'El entrenador lanzó la esfera roja para...',
+                        sentence: 'CAPTU___AR',
+                        options: ['R', 'RR'],
+                        answer: 'R',
+                        rule: 'Cuando el sonido es suave entre vocales se escribe una sola R (capturar, mirar).'
+                    },
+                    {
+                        id: 't7', type: 'choice',
+                        prompt: 'En el bosque alto crecía mucha...',
+                        sentence: '___ERBA',
+                        options: ['HI', 'Y'],
+                        answer: 'HI',
+                        rule: 'Empieza por hie-, por lo tanto se escribe con H: hierba.'
+                    },
+                    {
+                        id: 't8', type: 'choice',
+                        prompt: 'El líder del gimnasio llevaba un bonito...',
+                        sentence: 'ANI___O',
+                        options: ['LL', 'Y'],
+                        answer: 'LL',
+                        rule: 'Las palabras terminadas en -illo e -illa se escriben siempre con LL (anillo, castillo, silla).'
+                    },
+                    {
+                        id: 't9', type: 'choice',
+                        prompt: 'Al principio de palabra el sonido fuerte se escribe con una sola R, como en...',
+                        sentence: '___OCA',
+                        options: ['R', 'RR'],
+                        answer: 'R',
+                        rule: 'Nunca se escribe RR al principio de una palabra (roca, ratón, río).'
+                    },
+                    {
+                        id: 't10', type: 'choice',
+                        prompt: 'Hoy vamos a ganar el combate porque entrenamos...',
+                        sentence: 'MU___',
+                        options: ['Y', 'LL', 'I'],
+                        answer: 'Y',
+                        rule: 'Se escribe Y al final de palabra cuando no lleva tilde (muy, soy, voy, rey).'
+                    },
+                    {
+                        id: 't11', type: 'choice',
+                        prompt: 'Para curar al equipo fuimos al Centro a...',
+                        sentence: '___ACER DESCANSAR',
+                        options: ['H', 'Sin H'],
+                        answer: 'H',
+                        rule: 'Todas las formas del verbo HACER se escriben con H (hacer, hago, hizo, hecho).'
+                    },
+                    {
+                        id: 't12', type: 'choice',
+                        prompt: 'El pequeño pájaro amarillo tenía un pico...',
+                        sentence: 'AMARI___O',
+                        options: ['LL', 'Y'],
+                        answer: 'LL',
+                        rule: 'Las palabras terminadas en -illo llevan LL (amarillo, bolsillo).'
+                    },
+                    {
+                        id: 't13', type: 'order',
+                        prompt: 'Ordena la estrategia del entrenador:',
+                        words: ['El', 'entrenador', 'lanzó', 'su', 'esfera', 'roja.'],
+                        answer: 'El entrenador lanzó su esfera roja.',
+                        rule: 'Recuerda: "roja" empieza por R fuerte, pero al ir al principio lleva una sola R.'
+                    },
+                    {
+                        id: 't14', type: 'choice',
+                        prompt: 'Después de N, L o S se escribe una sola R aunque suene fuerte, como en...',
+                        sentence: 'EN___IQUE',
+                        options: ['R', 'RR'],
+                        answer: 'R',
+                        rule: 'Detrás de N, L o S nunca se duplica la R (Enrique, alrededor, Israel).'
+                    },
+                    {
+                        id: 't15', type: 'order',
+                        prompt: 'Completa la crónica de la victoria:',
+                        words: ['Hoy', 'hemos', 'ganado', 'la', 'medalla', 'de', 'oro.'],
+                        answer: 'Hoy hemos ganado la medalla de oro.',
+                        rule: '"Hoy" termina en Y, "hemos" es del verbo haber (con H) y "medalla" lleva LL.'
+                    }
+                ]
+            },
+            {
+                id: 'dragon',
+                name: 'Torneo Z: Bills y Bu',
+                subtitle: 'Sílaba tónica, tildes (agudas, llanas, esdrújulas) y C/Z/QU',
+                themeClass: 'theme-dragon',
+                accentColor: 'purple',
+                cardBg: 'from-purple-950/90 to-indigo-950/95',
+                borderColor: 'border-purple-400/50',
+                badgeBg: 'bg-amber-400 text-slate-950',
+                btnClass: 'from-purple-500 to-fuchsia-600 border-purple-900 text-white',
+                iconSvg: `<svg viewBox="0 0 64 64" class="w-16 h-16 drop-shadow-md">
+                    <circle cx="32" cy="32" r="24" fill="url(#dbGrad)" stroke="#FDE047" stroke-width="3"/>
+                    <defs>
+                        <radialGradient id="dbGrad" cx="35%" cy="35%" r="65%">
+                            <stop offset="0%" stop-color="#FDE047"/>
+                            <stop offset="55%" stop-color="#F97316"/>
+                            <stop offset="100%" stop-color="#C2410C"/>
+                        </radialGradient>
+                    </defs>
+                    <polygon points="32,16 35,25 44,25 37,30 39,39 32,34 25,39 27,30 20,25 29,25" fill="#DC2626"/>
+                </svg>`,
+                trophies: [
+                    { id: 'dragon_1', name: 'Pudin de Bills', desc: 'Consigue 5 aciertos en Torneo Z', req: 5, icon: '🍮' },
+                    { id: 'dragon_2', name: 'Esfera Suprema Z', desc: 'Supera los 15 desafíos de Bills y Bu', req: 15, icon: '🔮' }
+                ],
+                questions: [
+                    {
+                        id: 'd1', type: 'syllable',
+                        prompt: 'Toca la SÍLABA TÓNICA (la que suena más fuerte) en el postre favorito de Bills:',
+                        wordDisplay: 'PU - DIN',
+                        syllables: ['PU', 'DIN'],
+                        answer: 'DIN',
+                        rule: 'En "pudín" la sílaba fuerte es la última (DIN), por eso es una palabra AGUDA y lleva tilde al terminar en N.'
+                    },
+                    {
+                        id: 'd2', type: 'choice',
+                        prompt: 'A Bu le encantan los pasteles dulces llenos de...',
+                        sentence: 'A___ÚCAR',
+                        options: ['Z', 'C'],
+                        answer: 'Z',
+                        rule: 'Con A, O, U escribimos Z (za, zo, zu): azúcar.'
+                    },
+                    {
+                        id: 'd3', type: 'syllable',
+                        prompt: '¿Cuál es la sílaba tónica de esta palabra ESDRÚJULA?',
+                        wordDisplay: 'RÁ - PI - DO',
+                        syllables: ['RÁ', 'PI', 'DO'],
+                        answer: 'RÁ',
+                        rule: '¡Las palabras esdrújulas tienen la sílaba fuerte en la antepenúltima posición y SIEMPRE llevan tilde!'
+                    },
+                    {
+                        id: 'd4', type: 'choice',
+                        prompt: 'Para que la comida esté rica, el cocinero usa...',
+                        sentence: '___ESO',
+                        options: ['QU', 'C', 'K'],
+                        answer: 'QU',
+                        rule: 'El sonido K delante de E o I se escribe siempre con QU (queso, paquete, bosque).'
+                    },
+                    {
+                        id: 'd5', type: 'choice',
+                        prompt: 'Bills lanzó una esfera brillante de...',
+                        sentence: 'ENER___ÍA',
+                        options: ['G', 'J'],
+                        answer: 'G',
+                        rule: 'Energía lleva G y tilde en la í para separar el hiato (e-ner-gí-a).'
+                    },
+                    {
+                        id: 'd6', type: 'syllable',
+                        prompt: 'Toca la sílaba más fuerte de este personaje:',
+                        wordDisplay: 'DRA - GÓN',
+                        syllables: ['DRA', 'GÓN'],
+                        answer: 'GÓN',
+                        rule: 'Dra-gón es aguda (suena fuerte en la última) y lleva tilde porque termina en N.'
+                    },
+                    {
+                        id: 'd7', type: 'choice',
+                        prompt: 'Bu convirtió una roca gigante en un delicioso...',
+                        sentence: '___OCOLATE',
+                        options: ['CH', 'SH'],
+                        answer: 'CH',
+                        rule: 'Chocolate se escribe con CH.'
+                    },
+                    {
+                        id: 'd8', type: 'choice',
+                        prompt: 'El planeta de Bills tiene un árbol gigante en el...',
+                        sentence: '___ENTRO',
+                        options: ['C', 'Z'],
+                        answer: 'C',
+                        rule: 'Con E o I escribimos C (ce, ci): centro, cielo, cocina.'
+                    },
+                    {
+                        id: 'd9', type: 'syllable',
+                        prompt: 'Señala la sílaba tónica de esta palabra LLANA:',
+                        wordDisplay: 'ÁR - BOL',
+                        syllables: ['ÁR', 'BOL'],
+                        answer: 'ÁR',
+                        rule: 'Ár-bol es llana (suena fuerte en la penúltima) y lleva tilde porque NO termina en vocal, N ni S.'
+                    },
+                    {
+                        id: 'd10', type: 'choice',
+                        prompt: 'Cuando Bills se enfada tiene mucha...',
+                        sentence: 'FUER___A',
+                        options: ['Z', 'C'],
+                        answer: 'Z',
+                        rule: 'Delante de A, O, U escribimos Z: fuerza.'
+                    },
+                    {
+                        id: 'd11', type: 'choice',
+                        prompt: 'El torneo se celebra en un estadio...',
+                        sentence: 'CÓSMI___O',
+                        options: ['C', 'QU'],
+                        answer: 'C',
+                        rule: 'Delante de A, O, U el sonido K se escribe con C (ca, co, cu): cósmico.'
+                    },
+                    {
+                        id: 'd12', type: 'syllable',
+                        prompt: 'Toca la sílaba tónica de esta palabra:',
+                        wordDisplay: 'MÁ - GI - CO',
+                        syllables: ['MÁ', 'GI', 'CO'],
+                        answer: 'MÁ',
+                        rule: 'Má-gi-co es esdrújula (suena fuerte en MÁ) y todas las esdrújulas llevan tilde.'
+                    },
+                    {
+                        id: 'd13', type: 'order',
+                        prompt: 'Ordena la frase sobre la merienda de Bills:',
+                        words: ['Bills', 'comió', 'un', 'pudin', 'muy', 'dulce.'],
+                        answer: 'Bills comió un pudin muy dulce.',
+                        rule: 'Los nombres propios como Bills empiezan siempre por mayúscula.'
+                    },
+                    {
+                        id: 'd14', type: 'choice',
+                        prompt: 'Bu se comió cinco tabletas de turrón y diez...',
+                        sentence: 'NUE___ES',
+                        options: ['C', 'Z'],
+                        answer: 'C',
+                        rule: 'Las palabras que en singular acaban en Z (nuez), en plural cambian la Z por C (nueces).'
+                    },
+                    {
+                        id: 'd15', type: 'order',
+                        prompt: 'Ordena el grito de combate:',
+                        words: ['¡Qué', 'energía', 'tan', 'increíble', 'tienes!'],
+                        answer: '¡Qué energía tan increíble tienes!',
+                        rule: 'Las exclamaciones llevan signo de apertura (¡) al principio y de cierre (!) al final.'
+                    }
+                ]
+            },
+            {
+                id: 'magic',
+                name: 'Escuela de Magia',
+                subtitle: 'Mayúsculas, puntuación (¿?, ¡!, comas) y oraciones',
+                themeClass: 'theme-magic',
+                accentColor: 'sky',
+                cardBg: 'from-blue-950/90 to-slate-900/95',
+                borderColor: 'border-sky-400/50',
+                badgeBg: 'bg-sky-400 text-slate-950',
+                btnClass: 'from-sky-400 to-blue-600 border-blue-900 text-slate-950',
+                iconSvg: `<svg viewBox="0 0 64 64" class="w-16 h-16 drop-shadow-md">
+                    <path d="M12 52L46 18" stroke="#D97706" stroke-width="6" stroke-linecap="round"/>
+                    <path d="M40 24L46 18" stroke="#FDE047" stroke-width="6" stroke-linecap="round"/>
+                    <polygon points="50,8 52,14 58,16 52,18 50,24 48,18 42,16 48,14" fill="#FDE047"/>
+                    <circle cx="24" cy="18" r="2.5" fill="#38BDF8"/>
+                    <circle cx="52" cy="36" r="2.5" fill="#FDE047"/>
+                </svg>`,
+                trophies: [
+                    { id: 'magic_1', name: 'Pluma de Fénix', desc: 'Consigue 5 aciertos en Escuela de Magia', req: 5, icon: '🪶' },
+                    { id: 'magic_2', name: 'Varita de Saúco', desc: 'Gradúate con los 15 retos de Magia', req: 15, icon: '🪄' }
+                ],
+                questions: [
+                    {
+                        id: 'm1', type: 'choice',
+                        prompt: '¿Cómo se escribe correctamente el nombre del castillo mágico?',
+                        sentence: 'El castillo de ___ es enorme.',
+                        options: ['Hogwarts', 'hogwarts'],
+                        answer: 'Hogwarts',
+                        rule: 'Los nombres propios de lugares, personas y mascotas se escriben siempre con MAYÚSCULA inicial.'
+                    },
+                    {
+                        id: 'm2', type: 'choice',
+                        prompt: 'Elige los signos correctos para esta pregunta del profesor:',
+                        sentence: '___Dónde has dejado tu varita mágica___',
+                        options: ['¿ ... ?', '¡ ... !', '. ... .'],
+                        answer: '¿ ... ?',
+                        rule: 'En español, las preguntas llevan signo de interrogación al principio (¿) y al final (?).'
+                    },
+                    {
+                        id: 'm3', type: 'choice',
+                        prompt: '¿Qué signo falta para separar los elementos de esta lista?',
+                        sentence: 'En el caldero echamos ranas___ plumas, raíces y polvo de estrella.',
+                        options: [', (coma)', '. (punto)', '¿ (interrogación)'],
+                        answer: ', (coma)',
+                        rule: 'Usamos la coma (,) para separar los elementos de una enumeración, menos antes de la "y".'
+                    },
+                    {
+                        id: 'm4', type: 'choice',
+                        prompt: 'El aprendiz gritó emocionado al ver volar su escoba:',
+                        sentence: '___Qué hechizo tan asombroso___',
+                        options: ['¡ ... !', '¿ ... ?', ', ... .'],
+                        answer: '¡ ... !',
+                        rule: 'Para expresar sorpresa o alegría usamos los signos de exclamación al abrir (¡) y al cerrar (!).'
+                    },
+                    {
+                        id: 'm5', type: 'choice',
+                        prompt: 'Después de un punto y seguido, la siguiente palabra empieza con...',
+                        sentence: 'La lechuza trajo una carta. ___ abrió el sobre.',
+                        options: ['Alfonso', 'alfonso'],
+                        answer: 'Alfonso',
+                        rule: 'Siempre se escribe mayúscula después de un punto y en los nombres propios.'
+                    },
+                    {
+                        id: 'm6', type: 'order',
+                        prompt: 'Ordena las palabras para lanzar el encantamiento:',
+                        words: ['La', 'varita', 'lanzó', 'chispas', 'doradas.'],
+                        answer: 'La varita lanzó chispas doradas.',
+                        rule: 'Una oración es un conjunto de palabras ordenadas con sentido completo.'
+                    },
+                    {
+                        id: 'm7', type: 'choice',
+                        prompt: '¿Cuál de estas frases está bien escrita?',
+                        sentence: 'Elige la tarjeta sin errores:',
+                        options: ['Mi lechuza Hedwig vuela rápido.', 'mi lechuza hedwig vuela rápido'],
+                        answer: 'Mi lechuza Hedwig vuela rápido.',
+                        rule: 'Debe empezar con mayúscula (Mi), llevar mayúscula en el nombre propio (Hedwig) y acabar en punto.'
+                    },
+                    {
+                        id: 'm8', type: 'choice',
+                        prompt: 'Completa la enumeración de la clase de Pociones:',
+                        sentence: 'Necesitamos un caldero, una balanza___ un frasco y una cuchara.',
+                        options: [', (coma)', 'y', '?'],
+                        answer: ', (coma)',
+                        rule: 'Entre "balanza" y "un frasco" va una coma porque aún no es el último elemento de la lista.'
+                    },
+                    {
+                        id: 'm9', type: 'order',
+                        prompt: 'Ordena la pregunta del sombrero seleccionador:',
+                        words: ['¿A', 'qué', 'casa', 'perteneces', 'tú?'],
+                        answer: '¿A qué casa perteneces tú?',
+                        rule: 'Fíjate en cómo empieza por "¿A" en mayúscula y termina con "tú?".'
+                    },
+                    {
+                        id: 'm10', type: 'choice',
+                        prompt: 'Los días de la semana y los meses del año en español se escriben con...',
+                        sentence: 'Las clases empiezan en ___ .',
+                        options: ['septiembre (minúscula)', 'Septiembre (mayúscula)'],
+                        answer: 'septiembre (minúscula)',
+                        rule: 'En español, los días de la semana y los meses se escriben con minúscula (lunes, septiembre).'
+                    },
+                    {
+                        id: 'm11', type: 'order',
+                        prompt: 'Construye esta frase sobre el partido de escobas:',
+                        words: ['El', 'buscador', 'atrapó', 'la', 'pelota', 'dorada.'],
+                        answer: 'El buscador atrapó la pelota dorada.',
+                        rule: '¡Genial! Sujeto ("El buscador") + predicado ("atrapó la pelota dorada.").'
+                    },
+                    {
+                        id: 'm12', type: 'choice',
+                        prompt: '¿Qué signo cierra una oración normal que afirma algo?',
+                        sentence: 'El libro de hechizos está encima de la mesa___',
+                        options: ['. (punto)', ', (coma)', '¿'],
+                        answer: '. (punto)',
+                        rule: 'El punto final indica que la oración o el texto ha terminado.'
+                    },
+                    {
+                        id: 'm13', type: 'order',
+                        prompt: 'Ordena esta exclamación mágica:',
+                        words: ['¡Cuidado', 'con', 'la', 'poción', 'verde!'],
+                        answer: '¡Cuidado con la poción verde!',
+                        rule: 'Los signos ¡ ! encierran toda la exclamación.'
+                    },
+                    {
+                        id: 'm14', type: 'choice',
+                        prompt: 'Elige la opción correcta para escribir un diálogo:',
+                        sentence: 'El mago preguntó: ___Quieres aprender a volar___',
+                        options: ['¿ ... ?', '¡ ... !', ', ... ,'],
+                        answer: '¿ ... ?',
+                        rule: 'Como el mago está haciendo una pregunta, usamos los signos de interrogación ¿ ?'
+                    },
+                    {
+                        id: 'm15', type: 'order',
+                        prompt: 'Último reto de graduación mágica. Ordena la frase:',
+                        words: ['Alfonso', 'es', 'un', 'gran', 'mago', 'de', 'las', 'palabras.'],
+                        answer: 'Alfonso es un gran mago de las palabras.',
+                        rule: '¡Enhorabuena! Has dominado las mayúsculas, el orden y la puntuación.'
+                    }
+                ]
+            }
+        ];
+
+        /**
+         * ESTADO Y CONTROLADOR PRINCIPAL DE LA APLICACIÓN
+         */
+        class AventuraApp {
+            constructor() {
+                this.state = this.loadState();
+                this.currentView = 'hub'; // 'hub' | 'play' | 'summary'
+                this.activeWorld = null;
+                this.sessionQuestions = [];
+                this.currentIndex = 0;
+                this.isReviewMode = false;
+                this.hasAnsweredCurrent = false;
+                this.selectedOrderWords = [];
+                this.sessionCorrect = 0;
+                
+                this.updateHeader();
+                this.renderHub();
+            }
+
+            loadState() {
+                try {
+                    const saved = localStorage.getItem('aventura_ortografica_alfonso_v1');
+                    if (saved) {
+                        return JSON.parse(saved);
+                    }
+                } catch (e) {
+                    console.warn('No se pudo leer localStorage', e);
+                }
+                return {
+                    stars: 0,
+                    streak: 0,
+                    bestStreak: 0,
+                    completedIds: [], // IDs de preguntas acertadas al menos una vez
+                    failedIds: [],    // IDs de preguntas falladas pendientes de repaso
+                    unlockedTrophies: [],
+                    sound: true
+                };
+            }
+
+            saveState() {
+                try {
+                    localStorage.setItem('aventura_ortografica_alfonso_v1', JSON.stringify(this.state));
+                } catch (e) {
+                    console.warn('No se pudo guardar en localStorage', e);
+                }
+                this.updateHeader();
+            }
+
+            toggleSound() {
+                this.state.sound = !this.state.sound;
+                sfx.enabled = this.state.sound;
+                document.getElementById('btn-sound').textContent = this.state.sound ? '🔊' : '🔇';
+                if (this.state.sound) sfx.playTap();
+                this.saveState();
+            }
+
+            updateHeader() {
+                sfx.enabled = this.state.sound;
+                document.getElementById('btn-sound').textContent = this.state.sound ? '🔊' : '🔇';
+                document.getElementById('header-streak').textContent = this.state.streak;
+                document.getElementById('header-stars').textContent = this.state.stars;
+                document.getElementById('header-trophy-count').textContent = `${this.state.unlockedTrophies.length}/8`;
+            }
+
+            goHome() {
+                sfx.playTap();
+                this.currentView = 'hub';
+                this.activeWorld = null;
+                this.isReviewMode = false;
+                document.body.className = 'text-slate-100 min-h-screen flex flex-col justify-between theme-hub';
+                this.renderHub();
+            }
+
+            /**
+             * PANTALLA PRINCIPAL (SELECCIÓN DE MUNDOS)
+             */
+            renderHub() {
+                const container = document.getElementById('app-container');
+                const totalQuestions = WORLDS.reduce((acc, w) => acc + w.questions.length, 0);
+                const totalCompleted = this.state.completedIds.length;
+                const failedCount = this.state.failedIds.length;
+
+                let reviewBanner = '';
+                if (failedCount > 0) {
+                    reviewBanner = `
+                        <div class="mb-6 bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-rose-500/20 border-2 border-amber-400/50 rounded-3xl p-4 md:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 animate-pop">
+                            <div class="flex items-center gap-4 text-center sm:text-left">
+                                <div class="w-12 h-12 rounded-2xl bg-amber-400/20 border border-amber-400 flex items-center justify-center text-2xl shrink-0">🎯</div>
+                                <div>
+                                    <h3 class="font-display font-bold text-lg text-amber-300">¡Tienes ${failedCount} ${failedCount === 1 ? 'reto pendiente' : 'retos pendientes'} de repaso!</h3>
+                                    <p class="text-sm text-slate-300">Practica las palabras que fallaste para recuperar todas tus estrellas.</p>
+                                </div>
+                            </div>
+                            <button onclick="app.startReviewMode()" class="btn-tactile w-full sm:w-auto bg-gradient-to-b from-amber-400 to-orange-500 text-slate-950 font-display font-bold px-6 py-3.5 rounded-2xl border-b-4 border-orange-800 shadow-lg text-base shrink-0">
+                                Repasar Fallos (${failedCount})
+                            </button>
+                        </div>
+                    `;
+                }
+
+                const worldsHtml = WORLDS.map(world => {
+                    const worldCompleted = world.questions.filter(q => this.state.completedIds.includes(q.id)).length;
+                    const worldTotal = world.questions.length;
+                    const pct = Math.round((worldCompleted / worldTotal) * 100);
+
+                    return `
+                        <div onclick="app.startWorld('${world.id}')" class="btn-tactile cursor-pointer group relative overflow-hidden rounded-3xl bg-gradient-to-br ${world.cardBg} border-2 ${world.borderColor} p-6 md:p-7 shadow-xl flex flex-col justify-between transition-all hover:scale-[1.01]">
+                            <div>
+                                <div class="flex items-start justify-between gap-4 mb-4">
+                                    <div class="p-3 rounded-2xl bg-white/5 border border-white/10 group-hover:scale-105 transition-transform">
+                                        ${world.iconSvg}
+                                    </div>
+                                    <span class="px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider ${world.badgeBg}">
+                                        ${worldCompleted}/${worldTotal} Completados
+                                    </span>
+                                </div>
+                                <h2 class="font-display text-2xl md:text-3xl font-bold text-white mb-1">${world.name}</h2>
+                                <p class="text-slate-300 text-sm md:text-base font-medium mb-5">${world.subtitle}</p>
+                            </div>
+
+                            <div>
+                                <!-- Barra de progreso del mundo -->
+                                <div class="w-full h-3.5 bg-slate-950/70 rounded-full overflow-hidden border border-white/10 mb-4">
+                                    <div class="h-full bg-gradient-to-r from-amber-400 to-emerald-400 rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+                                </div>
+                                <div class="w-full py-3.5 rounded-2xl bg-gradient-to-b ${world.btnClass} border-b-4 font-display font-bold text-center text-lg shadow-md">
+                                    ${worldCompleted === worldTotal ? '¡Volver a Jugar!' : '¡Entrar al Mundo!'}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                container.innerHTML = `
+                    <div class="animate-pop">
+                        <!-- Bienvenida y progreso global -->
+                        <div class="text-center max-w-2xl mx-auto mb-6 md:mb-8">
+                            <span class="inline-block px-4 py-1.5 rounded-full bg-white/10 border border-white/15 text-amber-300 font-bold text-xs md:text-sm mb-3">
+                                Progreso Global: ${totalCompleted} de ${totalQuestions} misiones superadas
+                            </span>
+                            <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-2">
+                                ¡Hola, Alfonso! Elige tu aventura
+                            </h2>
+                            <p class="text-slate-300 text-base md:text-lg">
+                                Supera los retos de cada mundo para desbloquear todos los trofeos legendarios.
+                            </p>
+                        </div>
+
+                        ${reviewBanner}
+
+                        <!-- Rejilla de 4 Mundos (2x2 en tablet horizontal, 1 columna en móvil estrecho) -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+                            ${worldsHtml}
+                        </div>
+
+                        <!-- Botón de Chuleta de Reglas de 3.º -->
+                        <div class="mt-8 text-center">
+                            <button onclick="app.openRulesBook()" class="btn-tactile inline-flex items-center gap-2.5 bg-slate-800/90 hover:bg-slate-800 text-sky-300 border border-sky-400/30 border-b-4 border-slate-950 px-6 py-3.5 rounded-2xl font-display font-bold text-base md:text-lg">
+                                <span>📖</span>
+                                <span>Libro de Trucos de 3.º de Primaria</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            /**
+             * INICIAR UN MUNDO TEMÁTICO
+             */
+            startWorld(worldId) {
+                sfx.playTap();
+                const world = WORLDS.find(w => w.id === worldId);
+                if (!world) return;
+
+                this.activeWorld = world;
+                this.isReviewMode = false;
+                
+                // Priorizar preguntas no completadas, luego mezclar el resto para llegar a una ronda dinámica de hasta 8 preguntas (o todas si quiere seguir)
+                const uncompleted = world.questions.filter(q => !this.state.completedIds.includes(q.id));
+                const completed = world.questions.filter(q => this.state.completedIds.includes(q.id));
+                
+                const pool = [...this.shuffle(uncompleted), ...this.shuffle(completed)];
+                this.sessionQuestions = pool.slice(0, 8); // Sesiones ágiles de 8 retos ideales para tablet
+                this.currentIndex = 0;
+                this.sessionCorrect = 0;
+                this.currentView = 'play';
+
+                document.body.className = `text-slate-100 min-h-screen flex flex-col justify-between ${world.themeClass}`;
+                this.renderQuestion();
+            }
+
+            /**
+             * INICIAR MODO REPASO DE FALLOS
+             */
+            startReviewMode() {
+                sfx.playTap();
+                const allQuestions = WORLDS.flatMap(w => w.questions.map(q => ({ ...q, worldRef: w })));
+                const toReview = allQuestions.filter(q => this.state.failedIds.includes(q.id));
+                
+                if (toReview.length === 0) return;
+
+                this.activeWorld = {
+                    id: 'review',
+                    name: 'Entrenamiento Especial de Repaso',
+                    themeClass: 'theme-hub',
+                    btnClass: 'from-amber-400 to-orange-500 border-orange-800 text-slate-950'
+                };
+                this.isReviewMode = true;
+                this.sessionQuestions = this.shuffle(toReview);
+                this.currentIndex = 0;
+                this.sessionCorrect = 0;
+                this.currentView = 'play';
+
+                document.body.className = 'text-slate-100 min-h-screen flex flex-col justify-between theme-hub';
+                this.renderQuestion();
+            }
+
+            shuffle(array) {
+                const arr = [...array];
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                return arr;
+            }
+
+            /**
+             * RENDERIZAR PREGUNTA ACTUAL
+             */
+            renderQuestion() {
+                const container = document.getElementById('app-container');
+                const q = this.sessionQuestions[this.currentIndex];
+                this.hasAnsweredCurrent = false;
+                this.selectedOrderWords = [];
+
+                const progressPct = Math.round(((this.currentIndex) / this.sessionQuestions.length) * 100);
+                const worldTitle = this.isReviewMode ? `Repaso (${q.worldRef.name})` : this.activeWorld.name;
+
+                let interactionArea = '';
+
+                if (q.type === 'choice') {
+                    interactionArea = `
+                        <div class="bg-slate-950/60 border-2 border-white/10 rounded-3xl p-6 md:p-8 text-center mb-6">
+                            <p class="font-display text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide text-amber-300">
+                                ${q.sentence}
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-${q.options.length > 2 ? '3' : '2'} gap-4">
+                            ${q.options.map((opt, idx) => `
+                                <button onclick="app.checkChoiceAnswer('${opt.replace(/'/g, "\\'")}', this)" 
+                                    class="choice-btn btn-tactile min-h-[68px] md:min-h-[76px] px-6 py-4 rounded-2xl bg-slate-800 hover:bg-slate-700 border-2 border-white/15 border-b-4 border-slate-950 font-display text-2xl md:text-3xl font-bold text-white shadow-lg flex items-center justify-center">
+                                    ${opt}
+                                </button>
+                            `).join('')}
+                        </div>
+                    `;
+                } else if (q.type === 'syllable') {
+                    interactionArea = `
+                        <div class="bg-slate-950/60 border-2 border-white/10 rounded-3xl p-6 md:p-8 text-center mb-6">
+                            <p class="text-sm uppercase tracking-widest text-slate-400 font-bold mb-2">Pulsa la sílaba tónica</p>
+                            <p class="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-widest text-white">
+                                ${q.wordDisplay}
+                            </p>
+                        </div>
+                        <div class="flex flex-wrap items-center justify-center gap-4">
+                            ${q.syllables.map(syl => `
+                                <button onclick="app.checkChoiceAnswer('${syl}', this)" 
+                                    class="choice-btn btn-tactile min-w-[110px] md:min-w-[140px] min-h-[76px] px-7 py-4 rounded-2xl bg-indigo-900/80 hover:bg-indigo-800 border-2 border-indigo-400/40 border-b-4 border-indigo-950 font-display text-2xl md:text-3xl font-bold text-amber-300 shadow-lg">
+                                    ${syl}
+                                </button>
+                            `).join('')}
+                        </div>
+                    `;
+                } else if (q.type === 'order') {
+                    const shuffledWords = this.shuffle(q.words.map((w, i) => ({ text: w, id: i })));
+                    this.currentOrderBank = shuffledWords;
+
+                    interactionArea = `
+                        <!-- Zona de construcción de la frase -->
+                        <div id="order-dropzone" class="min-h-[84px] bg-slate-950/70 border-2 border-dashed border-amber-400/40 rounded-3xl p-4 md:p-5 mb-5 flex flex-wrap items-center justify-center gap-2.5">
+                            <span class="text-slate-500 font-semibold text-base">Toca las palabras de abajo en orden...</span>
+                        </div>
+
+                        <!-- Banco de palabras táctiles -->
+                        <div id="order-bank" class="flex flex-wrap items-center justify-center gap-3 mb-6">
+                            ${shuffledWords.map(item => `
+                                <button id="word-btn-${item.id}" onclick="app.toggleOrderWord(${item.id}, '${item.text.replace(/'/g, "\\'")}')" 
+                                    class="btn-tactile min-h-[58px] px-5 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 border-2 border-white/15 border-b-4 border-slate-950 font-display text-xl md:text-2xl font-bold text-white shadow-md">
+                                    ${item.text}
+                                </button>
+                            `).join('')}
+                        </div>
+
+                        <!-- Botones de acción para comprobar u ordenar -->
+                        <div class="flex items-center justify-center gap-4">
+                            <button onclick="app.resetOrderWords()" class="btn-tactile min-h-[58px] px-6 py-3 rounded-2xl bg-slate-800 text-slate-300 border border-white/15 border-b-4 border-slate-950 font-display font-bold text-lg">
+                                ↺ Borrar
+                            </button>
+                            <button id="btn-check-order" onclick="app.checkOrderAnswer()" disabled
+                                class="btn-tactile min-h-[58px] px-8 py-3 rounded-2xl bg-gradient-to-b from-emerald-400 to-emerald-600 disabled:opacity-40 disabled:pointer-events-none text-slate-950 border-b-4 border-emerald-900 font-display font-bold text-xl shadow-lg">
+                                Comprobar Frase ✓
+                            </button>
+                        </div>
+                    `;
+                }
+
+                container.innerHTML = `
+                    <div class="max-w-3xl mx-auto w-full animate-pop">
+                        <!-- Barra superior del reto -->
+                        <div class="flex items-center justify-between gap-4 mb-4">
+                            <button onclick="app.goHome()" class="btn-tactile px-4 py-2.5 rounded-2xl bg-slate-900/80 hover:bg-slate-800 border border-white/15 font-display font-bold text-sm md:text-base text-slate-200 flex items-center gap-2">
+                                <span>←</span>
+                                <span>Mundos</span>
+                            </button>
+                            <div class="text-center">
+                                <span class="text-xs md:text-sm font-extrabold uppercase tracking-wider text-amber-300">${worldTitle}</span>
+                                <p class="text-xs text-slate-400 font-bold">Reto ${this.currentIndex + 1} de ${this.sessionQuestions.length}</p>
+                            </div>
+                            <div class="w-20 text-right font-display font-bold text-emerald-400 text-sm md:text-base">
+                                ${this.sessionCorrect} ✓
+                            </div>
+                        </div>
+
+                        <!-- Barra de progreso -->
+                        <div class="w-full h-3 bg-slate-950/70 rounded-full overflow-hidden border border-white/10 mb-6">
+                            <div class="h-full bg-gradient-to-r from-amber-400 to-emerald-400 transition-all duration-300" style="width: ${progressPct}%"></div>
+                        </div>
+
+                        <!-- Tarjeta del Ejercicio -->
+                        <div class="bg-slate-900/85 backdrop-blur-md border-2 border-white/15 rounded-3xl p-6 md:p-8 shadow-2xl">
+                            <h3 class="font-display text-xl sm:text-2xl md:text-3xl font-bold text-white text-center mb-6 leading-snug">
+                                ${q.prompt}
+                            </h3>
+
+                            ${interactionArea}
+
+                            <!-- Panel de Feedback (oculto hasta responder) -->
+                            <div id="feedback-box" class="hidden mt-6 rounded-2xl p-5 md:p-6 border-2 animate-pop"></div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            /**
+             * LÓGICA PARA EJERCICIOS DE ORDENAR BLOQUES
+             */
+            toggleOrderWord(id, text) {
+                if (this.hasAnsweredCurrent) return;
+                sfx.playTap();
+
+                const existingIdx = this.selectedOrderWords.findIndex(w => w.id === id);
+                const bankBtn = document.getElementById(`word-btn-${id}`);
+
+                if (existingIdx > -1) {
+                    this.selectedOrderWords.splice(existingIdx, 1);
+                    if (bankBtn) bankBtn.classList.remove('opacity-30', 'pointer-events-none');
+                } else {
+                    this.selectedOrderWords.push({ id, text });
+                    if (bankBtn) bankBtn.classList.add('opacity-30', 'pointer-events-none');
+                }
+
+                this.renderOrderDropzone();
+            }
+
+            resetOrderWords() {
+                if (this.hasAnsweredCurrent) return;
+                sfx.playTap();
+                this.selectedOrderWords = [];
+                document.querySelectorAll('#order-bank button').forEach(b => b.classList.remove('opacity-30', 'pointer-events-none'));
+                this.renderOrderDropzone();
+            }
+
+            renderOrderDropzone() {
+                const dz = document.getElementById('order-dropzone');
+                const checkBtn = document.getElementById('btn-check-order');
+                const q = this.sessionQuestions[this.currentIndex];
+
+                if (this.selectedOrderWords.length === 0) {
+                    dz.innerHTML = `<span class="text-slate-500 font-semibold text-base">Toca las palabras de abajo en orden...</span>`;
+                } else {
+                    dz.innerHTML = this.selectedOrderWords.map(w => `
+                        <button onclick="app.toggleOrderWord(${w.id}, '${w.text.replace(/'/g, "\\'")}')" 
+                            class="btn-tactile px-4 py-2.5 rounded-xl bg-amber-400 text-slate-950 font-display text-xl md:text-2xl font-bold shadow">
+                            ${w.text}
+                        </button>
+                    `).join('');
+                }
+
+                if (checkBtn) {
+                    checkBtn.disabled = this.selectedOrderWords.length !== q.words.length;
+                }
+            }
+
+            checkOrderAnswer() {
+                if (this.hasAnsweredCurrent) return;
+                const q = this.sessionQuestions[this.currentIndex];
+                const userSentence = this.selectedOrderWords.map(w => w.text).join(' ');
+                const isCorrect = userSentence === q.answer;
+                this.handleResult(isCorrect, null);
+            }
+
+            /**
+             * LÓGICA PARA EJERCICIOS DE OPCIÓN MÚLTIPLE Y SÍLABA TÓNICA
+             */
+            checkChoiceAnswer(selectedOption, btnElement) {
+                if (this.hasAnsweredCurrent) return;
+                const q = this.sessionQuestions[this.currentIndex];
+                const isCorrect = selectedOption === q.answer;
+                this.handleResult(isCorrect, btnElement);
+            }
+
+            /**
+             * PROCESAR RESULTADO, FEEDBACK Y RECOMPENSAS
+             */
+            handleResult(isCorrect, btnElement) {
+                this.hasAnsweredCurrent = true;
+                const q = this.sessionQuestions[this.currentIndex];
+                const feedbackBox = document.getElementById('feedback-box');
+
+                // Desactivar botones de opciones
+                document.querySelectorAll('.choice-btn').forEach(btn => {
+                    btn.classList.add('pointer-events-none');
+                    if (btn.textContent.trim() === q.answer) {
+                        btn.classList.remove('bg-slate-800', 'bg-indigo-900/80');
+                        btn.classList.add('bg-emerald-500', 'text-slate-950', 'border-emerald-300');
+                    }
+                });
+
+                if (isCorrect) {
+                    sfx.playSuccess();
+                    this.spawnCelebrationParticles(btnElement);
+                    this.sessionCorrect++;
+                    this.state.stars += 10;
+                    this.state.streak += 1;
+                    if (this.state.streak > this.state.bestStreak) {
+                        this.state.bestStreak = this.state.streak;
+                    }
+
+                    // Marcar como completada y quitar de fallos si estaba
+                    if (!this.state.completedIds.includes(q.id)) {
+                        this.state.completedIds.push(q.id);
+                    }
+                    this.state.failedIds = this.state.failedIds.filter(id => id !== q.id);
+
+                    const newlyUnlocked = this.checkTrophies();
+                    this.saveState();
+
+                    let trophyAlert = '';
+                    if (newlyUnlocked) {
+                        trophyAlert = `
+                            <div class="mt-3 p-3 rounded-xl bg-amber-400/20 border border-amber-400 flex items-center gap-3">
+                                <span class="text-3xl">${newlyUnlocked.icon}</span>
+                                <div>
+                                    <p class="text-xs uppercase font-extrabold text-amber-300">¡Nuevo Trofeo Desbloqueado!</p>
+                                    <p class="font-display font-bold text-white text-lg">${newlyUnlocked.name}</p>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    feedbackBox.className = 'mt-6 rounded-2xl p-5 md:p-6 border-2 bg-emerald-950/90 border-emerald-400 animate-pop';
+                    feedbackBox.innerHTML = `
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                            <div>
+                                <h4 class="font-display text-2xl font-bold text-emerald-300 flex items-center gap-2">
+                                    <span>🌟</span> ¡Genial, Alfonso! +10 estrellas
+                                </h4>
+                                <p class="text-slate-200 text-base mt-1 font-medium">${q.rule}</p>
+                                ${trophyAlert}
+                            </div>
+                            <button onclick="app.nextQuestion()" class="btn-tactile w-full sm:w-auto shrink-0 px-7 py-4 rounded-2xl bg-gradient-to-b from-emerald-400 to-emerald-600 text-slate-950 border-b-4 border-emerald-900 font-display font-bold text-xl shadow-lg">
+                                Siguiente →
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    sfx.playHint();
+                    if (btnElement) {
+                        btnElement.classList.remove('bg-slate-800', 'bg-indigo-900/80');
+                        btnElement.classList.add('bg-rose-600/80', 'border-rose-300', 'animate-shake');
+                    }
+
+                    this.state.streak = 0;
+                    if (!this.state.failedIds.includes(q.id)) {
+                        this.state.failedIds.push(q.id);
+                    }
+                    this.saveState();
+
+                    feedbackBox.className = 'mt-6 rounded-2xl p-5 md:p-6 border-2 bg-amber-950/90 border-amber-400 animate-pop';
+                    feedbackBox.innerHTML = `
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                            <div>
+                                <h4 class="font-display text-xl md:text-2xl font-bold text-amber-300 flex items-center gap-2">
+                                    <span>💡</span> ¡Casi! Fíjate en este truco:
+                                </h4>
+                                <p class="text-white text-base md:text-lg mt-1 font-semibold">${q.rule}</p>
+                                <p class="text-emerald-300 text-sm font-bold mt-2">Respuesta correcta: <span class="underline">${q.answer}</span></p>
+                            </div>
+                            <button onclick="app.nextQuestion()" class="btn-tactile w-full sm:w-auto shrink-0 px-7 py-4 rounded-2xl bg-gradient-to-b from-amber-400 to-orange-500 text-slate-950 border-b-4 border-orange-800 font-display font-bold text-xl shadow-lg">
+                                ¡Entendido! →
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+
+            nextQuestion() {
+                sfx.playTap();
+                if (this.currentIndex + 1 < this.sessionQuestions.length) {
+                    this.currentIndex++;
+                    this.renderQuestion();
+                } else {
+                    this.renderSummary();
+                }
+            }
+
+            /**
+             * PANTALLA RESUMEN DE RONDA
+             */
+            renderSummary() {
+                sfx.playTrophy();
+                const container = document.getElementById('app-container');
+                const total = this.sessionQuestions.length;
+                const earnedStars = this.sessionCorrect * 10;
+
+                container.innerHTML = `
+                    <div class="max-w-xl mx-auto w-full bg-slate-900/90 border-2 border-amber-400/50 rounded-3xl p-8 text-center shadow-2xl animate-pop">
+                        <div class="text-6xl mb-4 animate-float">🏆</div>
+                        <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-2">
+                            ¡Misión Completada!
+                        </h2>
+                        <p class="text-slate-300 text-lg mb-6">
+                            Has superado <span class="text-emerald-400 font-extrabold">${this.sessionCorrect} de ${total}</span> retos en ${this.activeWorld.name}.
+                        </p>
+
+                        <div class="grid grid-cols-2 gap-4 mb-8">
+                            <div class="bg-slate-950/70 border border-white/10 rounded-2xl p-4">
+                                <p class="text-xs uppercase text-slate-400 font-bold">Estrellas ganadas</p>
+                                <p class="font-display text-3xl font-bold text-amber-300 mt-1">+${earnedStars} ⭐</p>
+                            </div>
+                            <div class="bg-slate-950/70 border border-white/10 rounded-2xl p-4">
+                                <p class="text-xs uppercase text-slate-400 font-bold">Mejor racha</p>
+                                <p class="font-display text-3xl font-bold text-orange-400 mt-1">${this.state.bestStreak} 🔥</p>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                            <button onclick="app.goHome()" class="btn-tactile flex-1 py-4 px-6 rounded-2xl bg-gradient-to-b from-amber-400 to-orange-500 text-slate-950 border-b-4 border-orange-800 font-display font-bold text-xl shadow-lg">
+                                Volver a los Mundos
+                            </button>
+                            ${!this.isReviewMode ? `
+                                <button onclick="app.startWorld('${this.activeWorld.id}')" class="btn-tactile flex-1 py-4 px-6 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white border border-white/15 border-b-4 border-slate-950 font-display font-bold text-xl">
+                                    Otra Ronda ↻
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            /**
+             * COMPROBAR DESBLOQUEO DE TROFEOS
+             */
+            checkTrophies() {
+                let newlyUnlocked = null;
+                WORLDS.forEach(w => {
+                    const worldSolved = w.questions.filter(q => this.state.completedIds.includes(q.id)).length;
+                    w.trophies.forEach(t => {
+                        if (worldSolved >= t.req && !this.state.unlockedTrophies.includes(t.id)) {
+                            this.state.unlockedTrophies.push(t.id);
+                            newlyUnlocked = t;
+                        }
+                    });
+                });
+                if (newlyUnlocked) {
+                    sfx.playTrophy();
+                }
+                return newlyUnlocked;
+            }
+
+            /**
+             * MODAL: ÁLBUM DE TROFEOS
+             */
+            openTrophies() {
+                sfx.playTap();
+                const overlay = document.getElementById('modal-overlay');
+                const content = document.getElementById('modal-content');
+
+                const allTrophiesHtml = WORLDS.map(w => {
+                    return w.trophies.map(t => {
+                        const unlocked = this.state.unlockedTrophies.includes(t.id);
+                        return `
+                            <div class="rounded-2xl p-4 border-2 ${unlocked ? 'bg-gradient-to-br from-amber-500/20 to-slate-800 border-amber-400' : 'bg-slate-950/60 border-white/10 opacity-60'} flex items-center gap-4">
+                                <div class="w-16 h-16 rounded-2xl bg-slate-900 border border-white/10 flex items-center justify-center text-4xl shrink-0">
+                                    ${unlocked ? t.icon : '🔒'}
+                                </div>
+                                <div>
+                                    <span class="text-[11px] uppercase font-extrabold tracking-wider text-amber-300">${w.name}</span>
+                                    <h4 class="font-display text-xl font-bold text-white">${t.name}</h4>
+                                    <p class="text-sm text-slate-300">${t.desc}</p>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }).join('');
+
+                content.innerHTML = `
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="font-display text-2xl md:text-3xl font-bold text-amber-300">🏆 Álbum de Trofeos de Alfonso</h3>
+                            <p class="text-slate-400 text-sm">Desbloqueados: ${this.state.unlockedTrophies.length} de 8</p>
+                        </div>
+                        <button onclick="app.closeModal()" class="btn-tactile w-11 h-11 rounded-2xl bg-slate-800 text-white font-bold text-xl border border-white/15">✕</button>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                        ${allTrophiesHtml}
+                    </div>
+                    <div class="text-center">
+                        <button onclick="app.closeModal()" class="btn-tactile px-8 py-3.5 rounded-2xl bg-amber-400 text-slate-950 font-display font-bold text-lg border-b-4 border-amber-700">
+                            ¡Seguir Jugando!
+                        </button>
+                    </div>
+                `;
+
+                overlay.classList.remove('hidden');
+                overlay.classList.add('flex');
+            }
+
+            /**
+             * MODAL: LIBRO DE TRUCOS DE 3.º DE PRIMARIA
+             */
+            openRulesBook() {
+                sfx.playTap();
+                const overlay = document.getElementById('modal-overlay');
+                const content = document.getElementById('modal-content');
+
+                content.innerHTML = `
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="font-display text-2xl md:text-3xl font-bold text-sky-300">📖 Chuleta Mágica de 3.º</h3>
+                        <button onclick="app.closeModal()" class="btn-tactile w-11 h-11 rounded-2xl bg-slate-800 text-white font-bold text-xl border border-white/15">✕</button>
+                    </div>
+                    <div class="space-y-4 text-slate-200">
+                        <div class="p-4 rounded-2xl bg-emerald-950/50 border border-emerald-500/30">
+                            <h4 class="font-display font-bold text-lg text-emerald-300 mb-1">🧱 Reglas de B/V y G/J</h4>
+                            <p class="text-sm md:text-base">• Siempre <strong>B</strong> después de <strong>M</strong> (<em>tambor</em>) y delante de consonante (<em>brújula, bloque</em>).<br>• Con <strong>G</strong>: <em>ga, go, gu</em>. Si suena suave con E/I lleva U muda: <em>gue, gui</em> (<em>hoguera</em>). Si suena la U lleva diéresis: <em>güe, güi</em> (<em>pingüino</em>).</p>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-rose-950/50 border border-rose-500/30">
+                            <h4 class="font-display font-bold text-lg text-rose-300 mb-1">⚡ Reglas de H, LL/Y y R/RR</h4>
+                            <p class="text-sm md:text-base">• Llevan <strong>H</strong> las palabras que empiezan por <em>hie-</em> y <em>hue-</em> (<em>hielo, huevo</em>) y los verbos <em>haber</em> y <em>hacer</em>.<br>• Se escribe <strong>RR</strong> solo entre vocales cuando suena fuerte (<em>torre</em>). Al principio (<em>roca</em>) o detrás de N/L/S (<em>Enrique</em>) va una sola R.</p>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-purple-950/50 border border-purple-500/30">
+                            <h4 class="font-display font-bold text-lg text-purple-300 mb-1">🔮 Tildes y C / Z / QU</h4>
+                            <p class="text-sm md:text-base">• <strong>Agudas</strong> (fuerte al final): llevan tilde si acaban en vocal, N o S (<em>pudín, dragón</em>).<br>• <strong>Esdrújulas</strong> (antepenúltima fuerte): llevan tilde SIEMPRE (<em>mágico, rápido</em>).</p>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-sky-950/50 border border-sky-500/30">
+                            <h4 class="font-display font-bold text-lg text-sky-300 mb-1">🪄 Mayúsculas y Puntuación</h4>
+                            <p class="text-sm md:text-base">• Mayúscula al empezar, después de punto y en nombres propios.<br>• En español las preguntas y exclamaciones llevan signo al abrir y al cerrar: <strong>¿...?</strong> y <strong>¡...!</strong></p>
+                        </div>
+                    </div>
+                    <div class="mt-6 text-center">
+                        <button onclick="app.closeModal()" class="btn-tactile px-8 py-3.5 rounded-2xl bg-sky-400 text-slate-950 font-display font-bold text-lg border-b-4 border-sky-700">
+                            ¡Listo!
+                        </button>
+                    </div>
+                `;
+
+                overlay.classList.remove('hidden');
+                overlay.classList.add('flex');
+            }
+
+            closeModal() {
+                sfx.playTap();
+                const overlay = document.getElementById('modal-overlay');
+                overlay.classList.add('hidden');
+                overlay.classList.remove('flex');
+            }
+
+            /**
+             * PARTÍCULAS VISUALES DE CELEBRACIÓN
+             */
+            spawnCelebrationParticles(originEl) {
+                const emojis = ['⭐', '✨', '⚡', '💎', '🔥'];
+                const rect = originEl ? originEl.getBoundingClientRect() : { left: window.innerWidth / 2, top: window.innerHeight / 2, width: 0, height: 0 };
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+
+                for (let i = 0; i < 14; i++) {
+                    const p = document.createElement('div');
+                    p.className = 'particle text-2xl';
+                    p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                    const angle = (Math.PI * 2 * i) / 14;
+                    const dist = 70 + Math.random() * 90;
+                    p.style.left = `${centerX}px`;
+                    p.style.top = `${centerY}px`;
+                    p.style.setProperty('--tx', `${Math.cos(angle) * dist}px`);
+                    p.style.setProperty('--ty', `${Math.sin(angle) * dist - 30}px`);
+                    document.body.appendChild(p);
+                    setTimeout(() => p.remove(), 1000);
+                }
+            }
+        }
+
+        // Arrancar la aplicación al cargar la página
+        window.addEventListener('DOMContentLoaded', () => {
+            window.app = new AventuraApp();
+        });
+    </script>
+</body>
+</html>
